@@ -1,0 +1,550 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "rocket league rank",
+            "intents": [
+                {
+                    "name": "AMAZON.FallbackIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": [
+                        "thats enough",
+                        "thanks",
+                        "stop",
+                        "thank you",
+                        "exit",
+                        "quit",
+                        "i'd like to quit"
+                    ]
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "all",
+                    "slots": [],
+                    "samples": [
+                        "list all ranks",
+                        "all ranks",
+                        "list ranks",
+                        "ranks",
+                        "what's my rank",
+                        "whats my rank",
+                        "total ranks",
+                        "what are my ranks",
+                        "ranks in everything",
+                        "tell me all my ranks"
+                    ]
+                },
+                {
+                    "name": "change",
+                    "slots": [
+                        {
+                            "name": "name",
+                            "type": "AMAZON.SearchQuery",
+                            "samples": [
+                                "{name}"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "user change",
+                        "change user",
+                        "switch user {name}",
+                        "switch account to {name}",
+                        "switch name to {name}",
+                        "switch user to {name}",
+                        "set name to {name}",
+                        "change name to {name}",
+                        "set account to {name}",
+                        "change account to {name}",
+                        "set user to {name}",
+                        "change profile to {name}",
+                        "set profile to {name}",
+                        "use {name} profile",
+                        "set {name}",
+                        "change user to {name}"
+                    ]
+                },
+                {
+                    "name": "duel",
+                    "slots": [],
+                    "samples": [
+                        "whats my ones rank",
+                        "whats my one v one rank",
+                        "whats my duel rank",
+                        "solo duel rank",
+                        "one rank",
+                        "what am i in one",
+                        "duel rank",
+                        "show duel rank",
+                        "ones rank",
+                        "what am i in ones",
+                        "whats my one v. one rank",
+                        "whats my one vs one rank",
+                        "whats my rank in duel",
+                        "What's my rank in duel"
+                    ]
+                },
+                {
+                    "name": "doubles",
+                    "slots": [],
+                    "samples": [
+                        "whats my two ranks",
+                        "whats my doubles rank",
+                        "show twos rank",
+                        "show doubles rank",
+                        "doubles rank",
+                        "what am i in two",
+                        "what am i in twos",
+                        "doubles",
+                        "two v. two rank",
+                        "twos rank",
+                        "whats my twos rank"
+                    ]
+                },
+                {
+                    "name": "standard",
+                    "slots": [],
+                    "samples": [
+                        "whats my standard rank",
+                        "three rank",
+                        "what is my rank in standard",
+                        "ranked threes",
+                        "standard rank",
+                        "three v three rank",
+                        "threes",
+                        "what am i in three",
+                        "what am i in standard"
+                    ]
+                },
+                {
+                    "name": "solostandard",
+                    "slots": [],
+                    "samples": [
+                        "whats my solo standard rank",
+                        "solo three",
+                        "whats my rank in solo three",
+                        "whats my rank in solo standard",
+                        "solo standard",
+                        "what am i in solo standard",
+                        "solo threes",
+                        "solo standard rank"
+                    ]
+                },
+                {
+                    "name": "hoops",
+                    "slots": [],
+                    "samples": [
+                        "whats my hoops rank",
+                        "what am i in hoop",
+                        "what am i in hoops",
+                        "hoop rank",
+                        "hoops rank",
+                        "whats my rank in hoops",
+                        "basketball",
+                        "basketball rank",
+                        "what am i in basketball",
+                        "what am in in hoops",
+                        "hoops",
+                        "hoops ranks"
+                    ]
+                },
+                {
+                    "name": "rumble",
+                    "slots": [],
+                    "samples": [
+                        "whats my rumble rank",
+                        "where am i in rumble",
+                        "ranked rumble",
+                        "rumble",
+                        "whats my rank in rumble",
+                        "what am i in rumble",
+                        "rumble rank"
+                    ]
+                },
+                {
+                    "name": "dropshot",
+                    "slots": [],
+                    "samples": [
+                        "ranked dropshot",
+                        "where am i in dropshot",
+                        "dropshot rank",
+                        "dropshot",
+                        "whats my rank in dropshot"
+                    ]
+                },
+                {
+                    "name": "snowday",
+                    "slots": [],
+                    "samples": [
+                        "whats my snowday rank",
+                        "what are my hockey ranks",
+                        "what are my snowday ranks",
+                        "snowday ranks",
+                        "hockey",
+                        "snowday",
+                        "hockey rank",
+                        "whats my rank in hockey",
+                        "whats my rank in snowday"
+                    ]
+                },
+                {
+                    "name": "seasonrank",
+                    "slots": [],
+                    "samples": [
+                        "what are my rewards this season",
+                        "what are my rewards",
+                        "season reward",
+                        "what are my current season rewards",
+                        "rewards",
+                        "season wins",
+                        "season rewards",
+                        "what are my season rewards",
+                        "how many wins do I have for my rewards"
+                    ]
+                },
+                {
+                    "name": "addname",
+                    "slots": [
+                        {
+                            "name": "name",
+                            "type": "AMAZON.SearchQuery",
+                            "samples": [
+                                "{name}"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "add name {name} to database",
+                        "add name {name}"
+                    ]
+                },
+                {
+                    "name": "adduser",
+                    "slots": [
+                        {
+                            "name": "user",
+                            "type": "AMAZON.SearchQuery",
+                            "samples": [
+                                "{user}"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "create user {user}",
+                        "add user name {user}",
+                        "add username {user} to database",
+                        "add user {user} to database",
+                        "add user {user}",
+                        "add username {user}"
+                    ]
+                },
+                {
+                    "name": "AMAZON.YesIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NoIntent",
+                    "samples": []
+                },
+                {
+                    "name": "delete",
+                    "slots": [
+                        {
+                            "name": "name",
+                            "type": "AMAZON.SearchQuery"
+                        }
+                    ],
+                    "samples": [
+                        "remove user {name}",
+                        "remove name {name}",
+                        "delete name {name}",
+                        "remove {name} from the database",
+                        "delete {name} from the database",
+                        "remove {name}",
+                        "delete {name}"
+                    ]
+                },
+                {
+                    "name": "list",
+                    "slots": [],
+                    "samples": [
+                        "list all profiles",
+                        "list profiles",
+                        "list",
+                        "users in database",
+                        "names in database",
+                        "names in the database",
+                        "list all",
+                        "list users in the database",
+                        "list names in the database",
+                        "list users",
+                        "list names",
+                        "list all name",
+                        "list all names",
+                        "list all user",
+                        "list all users"
+                    ]
+                },
+                {
+                    "name": "current",
+                    "slots": [],
+                    "samples": [
+                        "current profile",
+                        "what is the active user",
+                        "what is the active name",
+                        "active user",
+                        "active name",
+                        "current name",
+                        "current user",
+                        "what is the current name",
+                        "what's the current name",
+                        "what's the current user",
+                        "what is the current user"
+                    ]
+                },
+                {
+                    "name": "quicklookup",
+                    "slots": [
+                        {
+                            "name": "user",
+                            "type": "AMAZON.SearchQuery"
+                        }
+                    ],
+                    "samples": [
+                        "quick {user}",
+                        "look up user {user}",
+                        "look up profile {user}",
+                        "quick look up {user}",
+                        "look up {user}",
+                        "lookup {user}",
+                        "quick lookup {user}"
+                    ]
+                },
+                {
+                    "name": "refresh",
+                    "slots": [],
+                    "samples": [
+                        "refresh all",
+                        "update users",
+                        "refresh users",
+                        "refresh",
+                        "update profiles"
+                    ]
+                }
+            ],
+            "types": []
+        },
+        "dialog": {
+            "intents": [
+                {
+                    "name": "change",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "name",
+                            "type": "AMAZON.SearchQuery",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.1051770499989.268405741965"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "adduser",
+                    "confirmationRequired": true,
+                    "prompts": {
+                        "confirmation": "Confirm.Intent.704046978309"
+                    },
+                    "slots": [
+                        {
+                            "name": "user",
+                            "type": "AMAZON.SearchQuery",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.1328688467180.574326307968"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "addname",
+                    "confirmationRequired": true,
+                    "prompts": {
+                        "confirmation": "Confirm.Intent.1279425146684"
+                    },
+                    "slots": [
+                        {
+                            "name": "name",
+                            "type": "AMAZON.SearchQuery",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.821145898840.132743720093"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "delete",
+                    "confirmationRequired": true,
+                    "prompts": {
+                        "confirmation": "Confirm.Intent.105293693204"
+                    },
+                    "slots": [
+                        {
+                            "name": "name",
+                            "type": "AMAZON.SearchQuery",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        }
+                    ]
+                },
+                {
+                    "name": "quicklookup",
+                    "confirmationRequired": true,
+                    "prompts": {
+                        "confirmation": "Confirm.Intent.830367126374"
+                    },
+                    "slots": [
+                        {
+                            "name": "user",
+                            "type": "AMAZON.SearchQuery",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        }
+                    ]
+                }
+            ],
+            "delegationStrategy": "ALWAYS"
+        },
+        "prompts": [
+            {
+                "id": "Confirm.Intent.1491190602324",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Are you sure you would like to add {name} to the database as {user}"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.1051770499989.268405741965",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Please enter a name to switch the active profile"
+                    }
+                ]
+            },
+            {
+                "id": "Confirm.Intent.844400549726",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Are you sure you would like to add {user} "
+                    }
+                ]
+            },
+            {
+                "id": "Confirm.Intent.1187139972454",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Are you sure you would like to add {name}"
+                    }
+                ]
+            },
+            {
+                "id": "Confirm.Intent.704046978309",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "are you sure you would like to add user {user}"
+                    }
+                ]
+            },
+            {
+                "id": "Confirm.Intent.1279425146684",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Are you sure you would like to add name {name}"
+                    }
+                ]
+            },
+            {
+                "id": "Confirm.Slot.1328688467180.574326307968",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Are you sure you would like to add username {user}"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.1328688467180.574326307968",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "please enter a username for the future user"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.821145898840.132743720093",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Please enter a name for the future user"
+                    }
+                ]
+            },
+            {
+                "id": "Confirm.Slot.821145898840.132743720093",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Are you sure you would like to add name {name}"
+                    }
+                ]
+            },
+            {
+                "id": "Confirm.Intent.105293693204",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Are you sure you would like to delete {name} ?"
+                    }
+                ]
+            },
+            {
+                "id": "Confirm.Intent.830367126374",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "are you sure you would like to quick lookup {user}"
+                    }
+                ]
+            }
+        ]
+    }
+}
