@@ -1,122 +1,80 @@
-from lxml import html
-from lxml import etree
+import json
 import requests
+import RLnumbers
 
 class Ranks:
-
-    def __init__(self, profile = 'karmajuney', name = 'Alex'):
-        self.profile = 'https://rlstats.net/profile/Steam/' + profile
-        self.playlist = []
-        self.rank = []
-        self.division = []
-        self.mmr = []
-        self.seasonrewards = []
+    
+    def __init__(self, profile = 'karmajuney', name= 'Alex'):
+        ADD_KEY_HERE = ''
+        response = requests.get("https://api.rlstats.net/v1/profile/stats?apikey=" + ADD_KEY_HERE "&platformid=1&playerid=" + profile) #api request
+        currentSeason = "12" #easy way to change season
+        try:
+            self.player = json.loads(response.text) #convert from json to dic
+            self.player = self.player["RankedSeasons"][currentSeason] #only get info from this season
+        except:
+            self.player = "Error" #if that name doesn't exist, set error
         self.name = name
-        self.user = profile
-        page = requests.get(self.profile)
-        html_content = html.fromstring(page.content)
-        self.html_content = html_content       
-        self.createRanks()
-            
+
+    #------------------------------------------Create Playlists--------------------------------------#    
         
-    def createRanks(self):
-        self.playlist.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[1]/tr[1]/th[1]/text()'))).strip())
-        self.playlist.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[1]/tr[1]/th[2]/text()'))).strip())
-        self.playlist.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[1]/tr[1]/th[3]/text()'))).strip())
-        self.playlist.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[1]/tr[1]/th[4]/text()'))).strip())
-        self.playlist.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[2]/tr[1]/th[1]/text()'))).strip())
-        self.playlist.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[2]/tr[1]/th[2]/text()'))).strip())
-        self.playlist.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[2]/tr[1]/th[3]/text()'))).strip())
-        self.playlist.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[2]/tr[1]/th[4]/text()'))).strip())
-
-
-        self.rank.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[1]/tr[2]/td[1]/text()'))).strip())
-        self.rank.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[1]/tr[2]/td[2]/text()'))).strip())
-        self.rank.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[1]/tr[2]/td[3]/text()'))).strip())
-        self.rank.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[1]/tr[2]/td[4]/text()'))).strip())
-        self.rank.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[2]/tr[2]/td[1]/text()'))).strip())
-        self.rank.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[2]/tr[2]/td[2]/text()'))).strip())
-        self.rank.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[2]/tr[2]/td[3]/text()'))).strip())
-        self.rank.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[2]/tr[2]/td[4]/text()'))).strip())
-
-
-        self.division.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[1]/tr[3]/td[1]/text()'))).strip())
-        self.division.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[1]/tr[3]/td[2]/text()'))).strip())
-        self.division.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[1]/tr[3]/td[3]/text()'))).strip())
-        self.division.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[1]/tr[3]/td[4]/text()'))).strip())
-        self.division.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[2]/tr[3]/td[1]/text()'))).strip())
-        self.division.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[2]/tr[3]/td[2]/text()'))).strip())
-        self.division.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[2]/tr[3]/td[3]/text()'))).strip())
-        self.division.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[2]/tr[3]/td[4]/text()'))).strip())
-
-
-        self.mmr.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[1]/tr[4]/td[1]/text()'))).strip())
-        self.mmr.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[1]/tr[4]/td[2]/text()'))).strip())
-        self.mmr.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[1]/tr[4]/td[3]/text()'))).strip())
-        self.mmr.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[1]/tr[4]/td[4]/text()'))).strip())
-        self.mmr.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[2]/tr[4]/td[1]/text()'))).strip())
-        self.mmr.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[2]/tr[4]/td[2]/text()'))).strip())
-        self.mmr.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[2]/tr[4]/td[3]/text()'))).strip())
-        self.mmr.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[2]/table[2]/tr[4]/td[4]/text()'))).strip())
-
-
-        self.seasonrewards.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[1]/div[2]/div/div[1]/h2/text()'))).strip())
-        self.seasonrewards.append(''.join((self.html_content.xpath('//*[@id="skills"]/div[2]/div/div[2]/div[1]/div[2]/div/div[2]/h2/span[1]/text()'))).strip())
-        
-
     def duel(self):
-        if (self.playlist[0] == ''):
+        if (self.player == "Error"):
             return("A username error has occurred")
-        return("In " + self.playlist[0] + " "+ self.name + " is " + self.rank[0] + " " + self.division[0] + " with " + self.mmr[0] + " MMR")
+        playlistVar = "10"
+        return("In 1v1 Solo Duel " + self.name + " is " + RLnumbers.createRank(self.player[playlistVar]["Tier"],self.player[playlistVar]["Division"]) + " with " + str(self.player[playlistVar]["SkillRating"]) + " MMR")
         
     def doubles(self):
-        if (self.playlist[1] == ''):
+        if (self.player == "Error"):
             return("A username error has occurred")
-        return("In " + self.playlist[1] + " "+ self.name + " is " + self.rank[1] + " " + self.division[1] + " with " + self.mmr[1] + " MMR")
-             
+        playlistVar = "11"
+        return("In 2v2 Doubles " + self.name + " is " + RLnumbers.createRank(self.player[playlistVar]["Tier"],self.player[playlistVar]["Division"]) + " with " + str(self.player[playlistVar]["SkillRating"]) + " MMR")
+        
     def standard(self):
-        if (self.playlist[2] == ''):
+        if (self.player == "Error"):
             return("A username error has occurred")
-        return("In " + self.playlist[2] + " "+ self.name + " is " + self.rank[2] + " " + self.division[2] + " with " + self.mmr[2] + " MMR")
-              
+        playlistVar = "13"
+        return("In 3v3 Standard " + self.name + " is " + RLnumbers.createRank(self.player[playlistVar]["Tier"],self.player[playlistVar]["Division"]) + " with " + str(self.player[playlistVar]["SkillRating"]) + " MMR")
+          
     def solostandard(self):
-        if (self.playlist[3] == ''):
+        if (self.player == "Error"):
             return("A username error has occurred")
-        return("In " + self.playlist[3] + " "+ self.name + " is " + self.rank[3] + " " + self.division[3] + " with " + self.mmr[3] + " MMR")
-              
+        playlistVar = "12"
+        return("In 3v3 Solo Standard " + self.name + " is " + RLnumbers.createRank(self.player[playlistVar]["Tier"],self.player[playlistVar]["Division"]) + " with " + str(self.player[playlistVar]["SkillRating"]) + " MMR")
+        
     def hoops(self):
-        if (self.playlist[4] == ''):
+        if (self.player == "Error"):
             return("A username error has occurred")
-        return("In " + self.playlist[4] + " "+ self.name + " is " + self.rank[4] + " " + self.division[4] + " with " + self.mmr[4] + " MMR")
-              
+        playlistVar = "27"
+        return("In 2v2 Hoops " + self.name + " is " + RLnumbers.createRank(self.player[playlistVar]["Tier"],self.player[playlistVar]["Division"]) + " with " + str(self.player[playlistVar]["SkillRating"]) + " MMR")
+        
     def rumble(self):
-        if (self.playlist[5] == ''):
+        if (self.player == "Error"):
             return("A username error has occurred")
-        return("In " + self.playlist[5] + " "+ self.name + " is " + self.rank[5] + " " + self.division[5] + " with " + self.mmr[5] + " MMR")
-              
+        playlistVar = "28"
+        return("In 3v3 Rumble " + self.name + " is " + RLnumbers.createRank(self.player[playlistVar]["Tier"],self.player[playlistVar]["Division"]) + " with " + str(self.player[playlistVar]["SkillRating"]) + " MMR")
+        
     def dropshot(self):
-        if (self.playlist[6] == ''):
+        if (self.player == "Error"):
             return("A username error has occurred")
-        return("In " + self.playlist[6] + " "+ self.name + " is " + self.rank[6] + " " + self.division[6] + " with " + self.mmr[6] + " MMR")
-              
+        playlistVar = "29"
+        return("In 3v3 Dropshot " + self.name + " is " + RLnumbers.createRank(self.player[playlistVar]["Tier"],self.player[playlistVar]["Division"]) + " with " + str(self.player[playlistVar]["SkillRating"]) + " MMR")
+        
     def snowday(self):
-        if (self.playlist[7] == ''):
+        if (self.player == "Error"):
             return("A username error has occurred")
-        return("In " + self.playlist[7] + " "+ self.name + " is " + self.rank[7] + " " + self.division[7] + " with " + self.mmr[7] + " MMR")
-
+        playlistVar = "30"
+        return("In 3v3 Snowday " + self.name + " is " + RLnumbers.createRank(self.player[playlistVar]["Tier"],self.player[playlistVar]["Division"]) + " with " + str(self.player[playlistVar]["SkillRating"]) + " MMR")
+        
     def seasonrank(self):
-        if (self.playlist[0] == ''):
+        if (self.player == "Error"):
             return("A username error has occurred")
-        if (self.seasonrewards[1] == ''):
-            self.seasonrewards[1] = '10'
-        return(self.name + " is currently at " + self.seasonrewards[0] + " rewards, with " + self.seasonrewards[1] + " out of 10 wins")
+        return(self.name + RLnumbers.createRewards(self.player["RewardLevel"]["SeasonLevel"],self.player["RewardLevel"]["SeasonLevelWins"]))
 
     def all(self):
-        if (self.playlist[0] == ''):
+        if (self.player == "Error"):
             return("A username error has occurred")
         answer = ''
-        for i in range(8):
-            answer = answer + (" In " + self.playlist[i] + " "+ self.name + " is " + self.rank[i] + " " + self.division[i] + " with " + self.mmr[i] + " MMR. ")
+        answer = self.duel() + ". " + self.doubles() + ". " + self.standard() + ". " + self.solostandard() + ". " + self.hoops() + ". " + self.rumble() + ". " + self.dropshot() + ". " + self.snowday() + ". " + self.seasonrank() + ". "
         return (answer)
 
         
@@ -124,4 +82,5 @@ class Ranks:
 
 
         
+
 
