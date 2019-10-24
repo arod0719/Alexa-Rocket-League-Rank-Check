@@ -1,10 +1,10 @@
-#An Alexa Rocket League Rank Tracker 
+# An Alexa Rocket League Rank Tracker 
 
 Note: As of now this Alexa app only supports PC. I can add other platforms if requested
 
 Uses real names as key value pairs to provide easy voice implementation!
 
-##Usage
+## Usage
 Open application: "open rocket league rank"
 
 Add name to database: "add name (name)"
