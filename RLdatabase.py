@@ -1,5 +1,4 @@
 import boto3
-import time
 class Database:
 
     def __init__(self, amazonID):
@@ -35,8 +34,7 @@ class Database:
                     'WriteCapacityUnits': 1
                     }
                 )
-                time.sleep(10)  #wait for table to be created, better than get_waiter because it defaults to 20 secs 
-                self.table = dynamodb.Table(str(amazonID))
+                table.meta.client.get_waiter('table_exists').wait(TableName=str(amazonID), WaiterConfig={'Delay': 2}) #see if table has been created
             except:
                 pass
             self.table = dynamodb.Table(str(amazonID))
