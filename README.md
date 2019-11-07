@@ -4,7 +4,7 @@ Note: As of now this Alexa app only supports PC. I can add other platforms if re
 
 Uses real names as key value pairs to provide easy voice implementation!
 
-Can be found on the Alexa SKills AppStore [here](https://www.amazon.com/gp/product/B0814ZW5Q9?ref&ref=cm_sw_em_r_as_dp_PUqzhSesfEdQN)
+Can be found on the Alexa Skills AppStore [here](https://www.amazon.com/gp/product/B0814ZW5Q9?ref&ref=cm_sw_em_r_as_dp_PUqzhSesfEdQN)
 
 ## Usage
 Open application: "open rocket league rank"
