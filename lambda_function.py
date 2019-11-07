@@ -2,14 +2,13 @@ from __future__ import print_function
 from RocketLeagueRanks import *
 from RLdatabase import *
 
-usid = '' #alexa user profile
-session_ranks = Ranks() #creates a rank instance for every user
-database = Database(str(usid)) #find individual database
-database.cleanup() #remove errors in database
-
+usid = '' #usid will determine user ID
+session_ranks = Ranks()
+database = Database(str(usid))
+database.cleanup() #wipe db of any errors
 # --------------- Helpers that build all of the responses ----------------------
 
-def build_speechlet_response(title, output, should_end_session):
+def build_speechlet_response(title, output, reprompt_text, should_end_session):
     return {
         'outputSpeech': {
             'type': 'PlainText',
@@ -17,11 +16,17 @@ def build_speechlet_response(title, output, should_end_session):
         },
         'card': {
             'type': 'Simple',
-            'title': "SessionSpeechlet - " + title,
-            'content': "SessionSpeechlet - " + output
+            'title': title,
+            'content': output
+        },
+        'reprompt': {
+            'outputSpeech': {
+                'type': 'PlainText',
+                'text': reprompt_text
+            }
         },
         'shouldEndSession': should_end_session
-    }
+    } 
 
 def build_response(session_attributes, speechlet_response):
     return {
@@ -35,18 +40,19 @@ def transcribeName(string):
     return string
 
 
-# --------------- Skill request handeling  ------------------
+# --------------- Functions that control the skill's behavior ------------------
 def refresh_request():
     global database
     global session_ranks
     session_ranks = Ranks(session_ranks.user, session_ranks.name)
     database = Database(str(usid))
-    speech_output = "Database and Users have been successfully updated"
+    speech_output = "Database and user ranks have been successfully updated"
     session_attributes = {}
     card_title = "refresh"
     should_end_session = False
+    reprompt_text = "I will automatically shut off soon, say 'help' if you need the available commands"
     return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, should_end_session))
+        card_title, speech_output, reprompt_text, should_end_session))
 
 def get_session_change_request(intent, session):
     global session_ranks
@@ -64,40 +70,53 @@ def get_session_change_request(intent, session):
     session_attributes = {}
     card_title = "change"
     should_end_session = False
+    reprompt_text = "I will automatically shut off soon, say 'help' if you need the available commands"
     return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, should_end_session))
+        card_title, speech_output, reprompt_text, should_end_session))
 
 def quick_lookup_request(intent, session):
     if (intent["confirmationStatus"]=="CONFIRMED"):
         global session_ranks
         user = transcribeName(str(intent['slots']['user']['value']))
-        session_ranks = Ranks(user, "the player")
-        speech_output = user + "'s profile is now active"
+        if (Ranks(user, user).test() == "Error"):
+            speech_output = user + " is not a valid steam ID, Please enter a valid ID and try again"
+        else:
+            speech_output = user + "'s profile is now active"
+            session_ranks = Ranks(user, user)
     else:
         speech_output = "I won't lookup that player"
     session_attributes = {}
     card_title = "quicklookup"
     should_end_session = False
+    reprompt_text = "I will automatically shut off soon, say 'help' if you need the available commands"
     return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, should_end_session))
+        card_title, speech_output, reprompt_text, should_end_session))
     
 
 def get_userlist_response():
     userlist = database.listusers()
-    speech_output = "The current names in the database are " + userlist
+    if (userlist == ''):
+        speech_output = "The database is currently empty. Please add a name first by saying add name, followed by the name"
+    else:
+        speech_output = "The current names in the database are " + userlist
     session_attributes = {}
     card_title = "list"
     should_end_session = False
+    reprompt_text = "I will automatically shut off soon, say 'help' if you need the available commands"
     return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, should_end_session))
+        card_title, speech_output, reprompt_text, should_end_session))
 
 def get_current_user():
-    speech_output = "The current user is " + session_ranks.name
+    if (session_ranks.name == "dontexist"):
+        speech_output = "There is currently no profile active, say 'switch to' followed by a profile name to activate it"
+    else:
+        speech_output = "The current user is " + session_ranks.name
     session_attributes = {}
     card_title = "current"
     should_end_session = False
+    reprompt_text = "I will automatically shut off soon, say 'help' if you need the available commands"
     return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, should_end_session))
+        card_title, speech_output, reprompt_text, should_end_session))
     
 
 def delete_user_request(intent, session):
@@ -106,7 +125,7 @@ def delete_user_request(intent, session):
     name = transcribeName(str(intent['slots']['name']['value']))
     if (name in currentNames):
         if (intent["confirmationStatus"]=="CONFIRMED"):
-            database.delete(name)
+            database.delete(name.capitalize())
             database = Database(str(usid))
             speech_output = name + " has been successfully deleted."
         else:
@@ -116,8 +135,9 @@ def delete_user_request(intent, session):
     session_attributes = {}
     card_title = "delete"
     should_end_session = False
+    reprompt_text = "I will automatically shut off soon, say 'help' if you need the available commands"
     return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, should_end_session))
+        card_title, speech_output, reprompt_text, should_end_session))
     
 
 def add_name_request(intent, session):
@@ -128,7 +148,7 @@ def add_name_request(intent, session):
     if (name not in users):
         if (intent["confirmationStatus"]=="CONFIRMED"):
             database.add(name, 'null')
-            speech_output = name + " has been added successfully, please add their username now"
+            speech_output = name + " has been added successfully, please add their username now by saying add user followed by their steam ID"
             database = Database(str(usid))
         else:
             speech_output = "Okay I won't add " + name
@@ -137,22 +157,25 @@ def add_name_request(intent, session):
     session_attributes = {}
     card_title = "addname"
     should_end_session = False
+    reprompt_text = "I will automatically shut off soon, say 'help' if you need the available commands"
     return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, should_end_session))
+        card_title, speech_output, reprompt_text, should_end_session))
 
 def add_user_request(intent, session):
     global database
     global session_ranks
-    users = database.get()
     user = transcribeName(str(intent['slots']['user']['value']))
     names = database.freshname()
     if (len(names) == 1):
         if (intent["confirmationStatus"]=="CONFIRMED"):
-            for name in names:           
-                database.add(name, user)
-            session_ranks = Ranks(user, name)
-            speech_output = name + " has been added with username " + user + " successfully, " + name + " is now the active profile"
-            database = Database(str(usid))
+            for name in names:
+                if (Ranks(user, name).test() == "Error"):
+                    speech_output = user + " is not a valid steam ID, Please enter a valid ID and try again"
+                else:
+                    database.add(name, user)
+                    session_ranks = Ranks(user, name)
+                    speech_output = name + " has been added with username " + user + " successfully, " + name + " is now the active profile"
+                    database = Database(str(usid))
         else:
             speech_output = "Okay I won't add " + str(user)
     else:
@@ -160,8 +183,9 @@ def add_user_request(intent, session):
     session_attributes = {}
     card_title = "adduser"
     should_end_session = False
+    reprompt_text = "I will automatically shut off soon, say 'help' if you need the available commands"
     return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, should_end_session))
+        card_title, speech_output, reprompt_text, should_end_session))
 
 
 def get_seasonreward_response():
@@ -169,105 +193,153 @@ def get_seasonreward_response():
     card_title = "seasonreward"
     speech_output = "" + str(session_ranks.seasonrank())
     should_end_session = False
+    reprompt_text = "I will automatically shut off soon, say 'help' if you need the available commands"
     return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, should_end_session))
+        card_title, speech_output, reprompt_text, should_end_session))
 
 def get_all_response():
     session_attributes = {}
     card_title = "all"
     speech_output = "" + str(session_ranks.all())
     should_end_session = False
+    reprompt_text = "I will automatically shut off soon, say 'help' if you need the available commands"
     return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, should_end_session))
+        card_title, speech_output, reprompt_text, should_end_session))
 
 def get_duel_response():
     session_attributes = {}
     card_title = "all"
     speech_output = "" + str(session_ranks.duel())
     should_end_session = False
+    reprompt_text = "I will automatically shut off soon, say 'help' if you need the available commands"
     return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, should_end_session))
+        card_title, speech_output, reprompt_text, should_end_session))
 
 def get_doubles_response():
     session_attributes = {}
     card_title = "all"
     speech_output = "" + str(session_ranks.doubles())
     should_end_session = False
+    reprompt_text = "I will automatically shut off soon, say 'help' if you need the available commands"
     return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, should_end_session))
+        card_title, speech_output, reprompt_text, should_end_session))
 
 def get_standard_response():
     session_attributes = {}
     card_title = "all"
     speech_output = "" + str(session_ranks.standard())
     should_end_session = False
+    reprompt_text = "I will automatically shut off soon, say 'help' if you need the available commands"
     return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, should_end_session))
+        card_title, speech_output, reprompt_text, should_end_session))
 
 def get_solostandard_response():
     session_attributes = {}
     card_title = "all"
     speech_output = "" + str(session_ranks.solostandard())
     should_end_session = False
+    reprompt_text = "I will automatically shut off soon, say 'help' if you need the available commands"
     return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, should_end_session))
+        card_title, speech_output, reprompt_text, should_end_session))
 
 def get_hoops_response():
     session_attributes = {}
     card_title = "all"
     speech_output = "" + str(session_ranks.hoops())
     should_end_session = False
+    reprompt_text = "I will automatically shut off soon, say 'help' if you need the available commands"
     return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, should_end_session))
+        card_title, speech_output, reprompt_text, should_end_session))
 
 def get_rumble_response():
     session_attributes = {}
     card_title = "all"
     speech_output = "" + str(session_ranks.rumble())
     should_end_session = False
+    reprompt_text = "I will automatically shut off soon, say 'help' if you need the available commands"
     return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, should_end_session))
+        card_title, speech_output, reprompt_text, should_end_session))
 
 def get_dropshot_response():
     session_attributes = {}
     card_title = "all"
     speech_output = "" + str(session_ranks.dropshot())
     should_end_session = False
+    reprompt_text = "I will automatically shut off soon, say 'help' if you need the available commands"
     return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, should_end_session))
+        card_title, speech_output, reprompt_text, should_end_session))
 
 def get_snowday_response():
     session_attributes = {}
     card_title = "all"
     speech_output = "" + str(session_ranks.snowday())
     should_end_session = False
+    reprompt_text = "I will automatically shut off soon, say 'help' if you need the available commands"
     return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, should_end_session))
+        card_title, speech_output, reprompt_text, should_end_session))
     
 
 def get_welcome_response():
     session_attributes = {}
     card_title = "welcome"
-    speech_output = "Rocket League rank checker opened" 
+    if database.new() != True:
+        speech_output = "Welcome to Rocket League rank checker" 
+    else:
+        speech_output = "Welcome to Rocket League rank ! Here, I'll go through each command and explain it's usage! "\
+        "Add a name to our database by saying 'add name' followed by a first name. " \
+        "After adding a name, add a steam ID that plays Rocket League by saying 'add user' followed by a steam ID. " \
+        "If the name or username is complex, feel free to spell it out slowly. "\
+        "Switch between users by saying 'switch user' followed by the already added name. " \
+        "These names and users will save between sessions. " \
+        "Once a name and user are in the system, get their ranks by saying 'list all ranks' or specify a playlist by saying something like 'standard rank'. " \
+        "Say 'exit' to end the session and exit the rank checker. " \
+        "Finally, say 'help' at anytime for more detailed instructions and additional commands. " \
+        "enjoy!"
     should_end_session = False
+    reprompt_text = "I will automatically shut off soon, say 'help' if you need the available commands"
     return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, should_end_session))
+        card_title, speech_output, reprompt_text, should_end_session))
+        
+def get_help_response():
+    session_attributes = {}
+    card_title = "help"
+    speech_output = "Welcome to the help menu! Here, I'll go through each command and explain it's usage. "\
+        "Look up an account without adding it to the database by saying 'look up' followed by the steam ID, this will not save that name. " \
+        "Add a name to our database by saying 'add name' followed by a first name. " \
+        "After adding a name, add a steam ID that plays Rocket League by saying 'add user' followed by a steam ID. " \
+        "If the name or username is complex, feel free to spell it out slowly. "\
+        "Switch between users by saying 'switch user' followed by the already added name. " \
+        "These names and users will save between sessions. " \
+        "See the current user by saying 'current profile' " \
+        "Delete users by saying 'delete' followed by the profile name. " \
+        "List all users by saying list..." \
+        "Once a user is in the system, get their ranks by saying 'list all ranks', or specify a playlist by saying something like 'standard rank'. " \
+        "For season rewards information say 'season rewards'. " \
+        "Say 'exit' to end the session and exit the rank checker. " \
+        "Say help again for these commands to repeat. " \
+        "I hope this has helped!"
+    should_end_session = False
+    reprompt_text = "I will automatically shut off soon, say 'help' if you need the available commands"
+    return build_response(session_attributes, build_speechlet_response(
+        card_title, speech_output, reprompt_text, should_end_session))
 
 def get_fallback_response():
     session_attributes = {}
     card_title = "fallback"
     speech_output = "I do not know that command"
     should_end_session = False
+    reprompt_text = "I will automatically shut off soon, say 'help' if you need the available commands"
     return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, should_end_session))
+        card_title, speech_output, reprompt_text, should_end_session))
 
 def YesIntentResponse():
     session_attributes = {}
     card_title = "No"
     speech_output = "I won't do that"
     should_end_session = False
+    reprompt_text = "I will automatically shut off soon, say 'help' if you need the available commands"
     return build_response(session_attributes, build_speechlet_response(
-        card_title, speech_output, should_end_session))
+        card_title, speech_output, reprompt_text, should_end_session))
 
 
 def handle_session_end_request():
@@ -280,10 +352,11 @@ def handle_session_end_request():
     speech_output = "I hope your rank is as good as you hoped. " \
                     "Keep grinding gamer! "
     should_end_session = True
+    reprompt_text = "I will automatically shut off soon, say 'help' if you need the available commands"
     return build_response({}, build_speechlet_response(
-        card_title, speech_output, should_end_session))
+        card_title, speech_output, reprompt_text, should_end_session))
 
-# --------------- automatic requests ------------------
+# --------------- Events ------------------
     
 
 def on_launch(launch_request, session):
@@ -338,7 +411,7 @@ def on_intent(intent_request, session):
     elif intent_name == "AMAZON.FallbackIntent":
         return get_fallback_response()
     elif intent_name == "AMAZON.HelpIntent":
-        return get_welcome_response()
+        return get_help_response()
     elif intent_name == "AMAZON.CancelIntent" or intent_name == "AMAZON.StopIntent":
         return handle_session_end_request()
     else:
@@ -358,4 +431,4 @@ def lambda_handler(event, context):
     elif event['request']['type'] == "IntentRequest":
         return on_intent(event['request'], event['session'])
     elif event['request']['type'] == "SessionEndedRequest":
-        return on_session_ended(event['request'], event['session'])
+        return handle_session_end_request()
