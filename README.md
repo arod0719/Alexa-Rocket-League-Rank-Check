@@ -1,5 +1,7 @@
 # An Alexa Rocket League Rank Tracker 
 
+## Updated for Season 1
+
 Note: As of now this Alexa app only supports PC. I can add other platforms if requested
 
 Uses real names as key value pairs to provide easy voice implementation!
