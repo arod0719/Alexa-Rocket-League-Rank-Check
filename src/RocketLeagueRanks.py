@@ -7,7 +7,7 @@ class Ranks:
     def __init__(self, profile = "profile_error", name = "dontexist"):
         API = '' #put api key here
         response = requests.get("https://api.rlstats.net/v1/profile/stats?apikey=" + API + "&platformid=1&playerid=" + profile) #api call
-        currentSeason = "12" #easily change current season
+        currentSeason = "15" #easily change current season
         self.name = name
         self.user = profile
         if(self.name != "dontexist" ):
@@ -41,8 +41,7 @@ class Ranks:
     def solostandard(self):
         if (self.player == "Error"):
             return("A username error has occurred, please make sure you add and select a name first")
-        playlistVar = "12"
-        return("In 3v3 Solo Standard " + self.name + " is " + RLnumbers.createRank(self.player[playlistVar]["Tier"],self.player[playlistVar]["Division"]) + " with " + str(self.player[playlistVar]["SkillRating"]) + " MMR")
+        return("As of Season 1, Solo Standard has been discontinued. Sorry!")
         
     def hoops(self):
         if (self.player == "Error"):
